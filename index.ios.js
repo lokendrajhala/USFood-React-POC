@@ -98,14 +98,14 @@ export class USFTest extends Component{
 
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      timeSlots: ds.cloneWithRows(['7:00', '8:00', '9:00','7:00', '8:00', '10:00','7:00', '8:00', '9:00','7:00', '8:00', '9:00']),
+      timeSlots: ds.cloneWithRows(['7:00', '7:30', '8:00','8:30','9:00', '9:30', '10:00','10:30', '11:00', '11:30','12:00', '12:30']),
       dayEvent: {
         date: new Date(),
         event: [
-          {time:'7:00', title: 'abc', isFav : true, color:'black'},
-          {time:'8:30', title: 'xyz', isFav : true, color:'pink'},
-          {time:'10:00', title: 'pqr', isFav : false, color:'pink'},
-          {time:'12:00', title: 'jhghj', isFav : true, color:'red'},
+          {time:'7:00', title: 'Meeting with John', isFav : true, color:'green'},
+          {time:'8:30', title: 'Meeting with Lokendra', isFav : true, color:'gray'},
+          {time:'10:00', title: 'Call customer for USFood', isFav : false, color:'pink'},
+          {time:'11:00', title: 'Order new resources', isFav : true, color:'red'},
         ],
       }
     };
@@ -146,7 +146,7 @@ export class USFTest extends Component{
   setfav(rowData) {
     for(const event of this.state.dayEvent.event) {
       if(event.time === rowData && event.isFav) {
-        return 'yellow';
+        return '#F1B931';
       }
     }
     return "#ccc";
@@ -163,7 +163,7 @@ export class USFTest extends Component{
               <Text style={{fontWeight:'500'}}>{event.title}</Text>
             </View>
             <View style={{flex:1, justifyContent: 'center', alignItems: 'flex-end'}}>
-            <Icon name="star" size={30} color={this.setfav(rowData)} />
+            <Icon name="star" size={20} color={this.setfav(rowData)} />
             </View>
           </View>
         </View>;
@@ -179,7 +179,7 @@ export class USFTest extends Component{
             <View style={{flex:1}}>
               <View style={{flexDirection:'row'}}>
                 <View style={{paddingLeft:10, paddingRight:15,justifyContent: 'center'}}>
-                <Text style={{fontWeight:"600",color:this.timeColor(rowData), minWidth:40,}}>
+                <Text style={{fontWeight:"600",justifyContent: 'center',color:this.timeColor(rowData), minWidth:40,}}>
                   {rowData}
                 </Text>
                 </View>
@@ -196,13 +196,61 @@ export class USFTest extends Component{
   renderScene(route, navigator){
     console.log(this.state);
     return(
-      <View style={{marginTop:70}}>
-        <ListView
-          dataSource={this.state.timeSlots}
+        <View style={{flex:1}}>
+
+      <View style={{marginTop:70, flexDirection:'column'}}>
+
+
+          <View style={{flexDirection:'row',marginTop:10}}>
+
+              <View style={{flex:1, flexDirection:'row', paddingHorizontal:10}}>
+                <View style={{flex:1, justifyContent: 'center'}}><Icon name="angle-left" size={30}  /></View>
+                <View style={{flex:1, justifyContent: 'center'}}><Text style={{fontWeight:"600",justifyContent: 'center' }}>
+                  March
+                </Text></View>
+                <View style={{flex:1, justifyContent: 'center', alignItems:'flex-end'}}>
+                <Icon name="angle-right" size={30}  />
+                  </View>
+              </View>
+              <View style={{flex:1, flexDirection:'row', paddingHorizontal:10}}>
+                <View style={{ justifyContent: 'center'}}><Icon name="angle-left" size={30}  /></View>
+
+                <View style={{flex:1, justifyContent: 'center',alignItems:'center'}}>
+                <Text style={{fontWeight:"600",justifyContent: 'center',alignItems:'center' }}>
+                    {""+new Date().toLocaleDateString()}
+                  </Text>
+
+                  </View>
+                <View style={{ justifyContent: 'center', alignItems:'flex-end'}}>
+                  <Icon name="angle-right" size={30}  />
+                </View>
+                </View>
+
+          </View>
+        <View style={{backgroundColor:'#ccc',height:1}}/>
+        <ListView dataSource={this.state.timeSlots}
           renderRow={(rowData) => this.renderRow(rowData)}
           renderSeparator={this._renderSeparator}
         />
+
+        <View style={{backgroundColor:'#ccc',minHeight:80,alignItems:'center', flex:1,justifyContent: 'center',flexDirection:'row'}}>
+
+
+          <View style={{flex:1, justifyContent: 'center',alignItems:'center'}}>
+              <Text style={{fontWeight:"600",justifyContent: 'center' }}>Days</Text>
+            </View>
+          <View style={{flex:1, justifyContent: 'center',alignItems:'center'}}>
+              <Text style={{fontWeight:"600",justifyContent: 'center' }}>Week</Text>
+            </View>
+          <View style={{flex:1, justifyContent: 'center',alignItems:'center'}}>
+              <Text style={{fontWeight:"600",justifyContent: 'center' }}>Month</Text>
+            </View>
+          </View>
+
+
+
       </View>
+    </View>
     )
   }
   gotoHelloWorld() {
@@ -282,6 +330,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 5,
     backgroundColor: '#fff',
+    minHeight:50,
+  },
+  column: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: 5,
+
+    minHeight:50,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 5,
+    backgroundColor: '#f3f3f3',
+    minHeight:50,
+  },footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 5,
+    backgroundColor: '#f3f3f3',
     minHeight:50,
   },
   text: {
