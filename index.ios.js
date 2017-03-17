@@ -227,13 +227,13 @@ export class USFTest extends Component{
                 </View>
 
           </View>
-        <View style={{backgroundColor:'#ccc',height:1}}/>
+        <View style={{marginTop:10,backgroundColor:'#ccc',height:1}}/>
         <ListView dataSource={this.state.timeSlots}
           renderRow={(rowData) => this.renderRow(rowData)}
           renderSeparator={this._renderSeparator}
         />
 
-        <View style={{backgroundColor:'#ccc',minHeight:80,alignItems:'center', flex:1,justifyContent: 'center',flexDirection:'row'}}>
+        <View style={{marginBottom:20,backgroundColor:'#ccc',minHeight:80,alignItems:'center', flex:1,justifyContent: 'center',flexDirection:'row'}}>
 
 
           <View style={{flex:1, justifyContent: 'center',alignItems:'center'}}>
