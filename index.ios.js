@@ -5,6 +5,7 @@
  */
 
 import React, { Component } from 'react';
+
 import {
   AppRegistry,
   StyleSheet,
@@ -17,7 +18,11 @@ import {
   TouchableWithoutFeedback,
   ListView
 } from 'react-native';
+//Icon lib
 import Icon from 'react-native-vector-icons/FontAwesome';
+
+//Moment Lib for date
+import Moment from 'moment';
 
 export class App extends Component{
   render() {
@@ -156,10 +161,18 @@ export class USFTest extends Component{
           {time:'8:30', title: 'Meeting with Lokendra', isFav : true, color:'gray'},
           {time:'10:00', title: 'Call customer for USFood', isFav : false, color:'pink'},
           {time:'11:00', title: 'Order new resources', isFav : true, color:'red'},
-        ],
-      }
+        ]
+
+      },
+      selectedDate:""+Moment().format('ddd Do MMM YYYY')
     };
+
+    this._onMonthPrevButton = this._onMonthPrevButton.bind(this);
+    this._onMonthNextButton = this._onMonthNextButton.bind(this);
+    this._onDayPrevButton = this._onDayPrevButton.bind(this);
+    this._onDayNextButton = this._onDayNextButton.bind(this);
   }
+
 
   render() {
     return (
@@ -219,7 +232,7 @@ export class USFTest extends Component{
         return <CalendarEvent event={event} navigator={navigator}/>;
       }
     }
-    return <View style={{flex:1}}/>;
+    return <View style={{flex:1,minHeight:50}}/>;
   }
 
   renderRow(rowData, navigator) {
@@ -243,6 +256,61 @@ export class USFTest extends Component{
         </View>
       </TouchableHighlight>
   }
+  renderFooter()
+  {
+    return  <View style={{backgroundColor:'#fff',paddingTop:10,minHeight:100, flex:1,flexDirection:'row',alignItems:'flex-start'}}>
+
+
+          <View style={{flex:1,flexDirection:'column',justifyContent: 'center',alignItems:'center'}}>
+            <Text style={{fontWeight:"600",justifyContent: 'center',alignItems:'center'}}>DAY</Text>
+            <View style={{backgroundColor:'#5D862E',width:50,height:8,marginTop:5}} />
+          </View>
+          <View style={{flex:1,flexDirection:'column',justifyContent: 'center',alignItems:'center'}}>
+            <Text style={{fontWeight:"600",justifyContent: 'center' }}>WEEK</Text>
+            <View style={{backgroundColor:'#fff',width:50,height:8,marginTop:5,}} />
+          </View>
+          <View style={{flex:1,flexDirection:'column',justifyContent: 'center',alignItems:'center'}}>
+            <Text style={{fontWeight:"600",justifyContent: 'center' }}>MONTH</Text>
+            <View style={{backgroundColor:'#fff',width:50,height:8,marginTop:5}} />
+          </View>
+        </View>
+
+
+
+
+  }
+
+
+  _onMonthPrevButton()
+  {
+
+
+    this.setState({selectedDate:""+Moment((Moment(this.state.selectedDate,"ddd Do MMM YYYY").subtract(1, 'months').calendar())).format('ddd Do MMM YYYY')});
+
+
+  }
+  _onMonthNextButton()
+  {
+
+
+    this.setState({selectedDate:""+Moment((Moment(this.state.selectedDate,"ddd Do MMM YYYY").add(1, 'months').calendar())).format('ddd Do MMM YYYY')});
+
+  }
+  _onDayPrevButton()
+  {
+
+    this.setState({selectedDate:""+Moment((Moment(this.state.selectedDate,"ddd Do MMM YYYY").subtract(1, 'days').format())).format('ddd Do MMM YYYY')});
+
+  }
+  _onDayNextButton()
+  {
+
+      console.log(""+Moment().subtract(1, 'days').format('ddd'));
+    console.log(""+Moment((Moment(this.state.selectedDate,"ddd Do MMM YYYY").add(1, 'days').format())).format('ddd Do MMM YYYY'));
+
+    this.setState({selectedDate:""+Moment((Moment(this.state.selectedDate,"ddd Do MMM YYYY").add(1, 'days').format())).format('ddd Do MMM YYYY')});
+   // console.log(""+this.state.selectedDate);
+  }
 
   renderScene(route, navigator){
     //console.log(this.state);
@@ -251,38 +319,37 @@ export class USFTest extends Component{
         <View style={{flex:1}}>
 
       <View style={{marginTop:70, flexDirection:'column'}}>
+        <View style={{flexDirection:'row',marginTop:10}}>
 
-
-          <View style={{flexDirection:'row',marginTop:10}}>
-
-              <View style={{flex:1, flexDirection:'row', paddingHorizontal:10}}>
-                <View style={{flex:1, justifyContent: 'center'}}><TouchableOpacity><Icon name="angle-left" size={30} color="#acacac" /></TouchableOpacity></View>
-                <View style={{flex:1, justifyContent: 'center'}}><Text style={{fontWeight:"600",justifyContent: 'center', fontFamily: 'HelveticaNeue-CondensedBold', color: '#333'}}>
-                  MARCH
-                </Text></View>
-                <View style={{flex:1, justifyContent: 'center', alignItems:'flex-end'}}>
-                  <TouchableOpacity>
-                    <Icon name="angle-right" size={30} color="#acacac" />
-                  </TouchableOpacity>
-                  </View>
-                </View>
-              <View style={{flex:1, flexDirection:'row', paddingHorizontal:10}}>
-                <View style={{ justifyContent: 'center'}}><TouchableOpacity><Icon name="angle-left" size={30} color="#acacac" /></TouchableOpacity></View>
-
-                <View style={{flex:1, justifyContent: 'center',alignItems:'center'}}>
-                <Text style={{fontWeight:"200",justifyContent: 'center',alignItems:'center', fontFamily: 'HelveticaNeue-Thin' }}>
-                    {""+new Date().toLocaleDateString()}
-                  </Text>
-
-                  </View>
-                <View style={{ justifyContent: 'center', alignItems:'flex-end'}}>
-                  <TouchableOpacity>
-                    <Icon name="angle-right" size={30} color="#acacac" />
-                  </TouchableOpacity>
-                </View>
-                </View>
-
+          <View style={{flex:1, flexDirection:'row', paddingHorizontal:10}}>
+            <TouchableHighlight onPress={this._onMonthPrevButton} style={{ justifyContent: 'center'}}><Icon
+                name="angle-left" size={30} color="#acacac"/></TouchableHighlight>
+            <View style={{flex:1, justifyContent: 'center',alignItems:'center'}}>
+              <Text style={{fontWeight:"600",justifyContent: 'center',alignItems:'center' }}>
+                {Moment(this.state.selectedDate, "ddd Do MMM YYYY").format('MMMM')}
+              </Text>
+            </View>
+            <TouchableHighlight onPress={this._onMonthNextButton}
+                                style={{ justifyContent: 'center', alignItems:'flex-end'}}>
+              <Icon name="angle-right" size={30} color="#acacac"/>
+            </TouchableHighlight>
           </View>
+          <View style={{flex:1, flexDirection:'row', paddingHorizontal:10}}>
+            <TouchableHighlight onPress={this._onDayPrevButton} style={{ justifyContent: 'center'}}><Icon
+                name="angle-left" size={30} color="#acacac"/></TouchableHighlight>
+            <View style={{flex:1, justifyContent: 'center',alignItems:'center'}}>
+              <Text style={{fontWeight:"600",justifyContent: 'center',alignItems:'center' }}>
+                {"" + this.state.selectedDate}
+              </Text>
+
+            </View>
+            <TouchableHighlight onPress={this._onDayNextButton}
+                                style={{ justifyContent: 'center', alignItems:'flex-end'}}>
+              <Icon name="angle-right" size={30} color="#acacac"/>
+            </TouchableHighlight>
+          </View>
+
+        </View>
         <View style={{marginTop:10,backgroundColor:'#ccc',height:1}}/>
         <ListView dataSource={this.state.timeSlots}
           renderRow={(rowData) => this.renderRow(rowData, navigator)}
@@ -290,22 +357,8 @@ export class USFTest extends Component{
           style={{marginBottom:100}}
         />
 
-        <View style={{backgroundColor:'#f4f4f4',minHeight:50,alignItems:'center', flex:1,justifyContent: 'center',flexDirection:'row', alignSelf: 'stretch', position: 'absolute', bottom: 50}}>
 
-
-          <View style={{flex:1, justifyContent: 'center',alignItems:'center', height: 50}}>
-              <Text style={{fontWeight:"600",justifyContent: 'center', paddingLeft: 10, alignSelf: 'stretch', textAlign: 'left',fontFamily: 'HelveticaNeue-Light'}}>DAY</Text>
-              <View style={{flex:1, justifyContent: 'center', width: 28, height: 10, backgroundColor: '#5c8727', position: 'absolute', left: 10, bottom: 0}}/>
-            </View>
-          <View style={{flex:1, justifyContent: 'center',alignItems:'center', height: 50}}>
-              <Text style={{fontWeight:"600",justifyContent: 'center', fontFamily: 'HelveticaNeue-Light', color:'#999' }}>WEEK</Text>
-              <View style={{flex:1, justifyContent: 'center', width: 38, height: 0, backgroundColor: '#5c8727', position: 'absolute',  bottom: 0}}/>
-            </View>
-          <View style={{flex:1, justifyContent: 'center',alignItems:'center', height: 50}}>
-              <Text style={{fontWeight:"600",justifyContent: 'center', paddingRight: 10,  alignSelf: 'stretch', textAlign: 'right', fontFamily: 'HelveticaNeue-Light', color: '#999'}}>MONTH</Text>
-              <View style={{flex:1, justifyContent: 'center', width: 52, height: 0, backgroundColor: '#5c8727', position: 'absolute', right: 10, bottom: 0}}/>
-            </View>
-          </View>
+        {this.renderFooter()}
 
 
 
@@ -398,6 +451,9 @@ const styles = StyleSheet.create({
     padding: 5,
 
     minHeight:50,
+  },border: {
+    borderColor:'pink',
+    borderWidth:4
   },
   header: {
     flexDirection: 'row',
@@ -414,6 +470,14 @@ const styles = StyleSheet.create({
   },
   text: {
 
+  }, box: {
+    flexDirection:'row', borderColor:'rgb(234,234,235)', borderWidth:1,shadowColor: "#000000",
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    shadowOffset: {
+      height: 1,
+      width: 0
+    }
   }
 });
 
