@@ -5,6 +5,7 @@
  */
 
 import React, { Component } from 'react';
+
 import {
   AppRegistry,
   StyleSheet,
@@ -16,7 +17,11 @@ import {
   TouchableOpacity,
   ListView
 } from 'react-native';
+//Icon lib
 import Icon from 'react-native-vector-icons/FontAwesome';
+
+//Moment Lib for date
+import Moment from 'moment';
 
 export class App extends Component{
   render() {
@@ -106,10 +111,18 @@ export class USFTest extends Component{
           {time:'8:30', title: 'Meeting with Lokendra', isFav : true, color:'gray'},
           {time:'10:00', title: 'Call customer for USFood', isFav : false, color:'pink'},
           {time:'11:00', title: 'Order new resources', isFav : true, color:'red'},
-        ],
-      }
+        ]
+
+      },
+      selectedDate:""+Moment().format('ddd Do MMM YYYY')
     };
+
+    this._onMonthPrevButton = this._onMonthPrevButton.bind(this);
+    this._onMonthNextButton = this._onMonthNextButton.bind(this);
+    this._onDayPrevButton = this._onDayPrevButton.bind(this);
+    this._onDayNextButton = this._onDayNextButton.bind(this);
   }
+
 
   render() {
     return (
@@ -155,7 +168,7 @@ export class USFTest extends Component{
   renderEvent(rowData) {
     for(const event of this.state.dayEvent.event) {
       if(event.time === rowData) {
-        return <View style={{flexDirection:'row', borderColor:'rgb(234,234,235)', borderWidth:1}}>
+        return <View style={styles.box}>
           <View style={{minWidth:5, backgroundColor:event.color}}>
           </View>
           <View style={{flex:1, flexDirection:'row', justifyContent: 'center', padding:9}}>
@@ -169,7 +182,7 @@ export class USFTest extends Component{
         </View>;
       }
     }
-    return <View style={{flex:1}}/>;
+    return <View style={{flex:1,minHeight:50}}/>;
   }
 
   renderRow(rowData) {
@@ -178,8 +191,8 @@ export class USFTest extends Component{
           <View style={styles.row}>
             <View style={{flex:1}}>
               <View style={{flexDirection:'row'}}>
-                <View style={{paddingLeft:10, paddingRight:15,justifyContent: 'center'}}>
-                <Text style={{fontWeight:"600",justifyContent: 'center',color:this.timeColor(rowData), minWidth:40,}}>
+                <View style={{paddingLeft:10, paddingRight:15,justifyContent: 'center',alignItems:'center'}}>
+                <Text style={{fontWeight:"600",justifyContent: 'center',alignItems:'center',color:this.timeColor(rowData), minWidth:40,}}>
                   {rowData}
                 </Text>
                 </View>
@@ -193,7 +206,62 @@ export class USFTest extends Component{
       </TouchableHighlight>
   }
 
-  renderScene(route, navigator){
+  renderFooter()
+  {
+    return  <View style={{backgroundColor:'#fff',paddingTop:10,minHeight:100, flex:1,flexDirection:'row',alignItems:'flex-start'}}>
+
+
+          <View style={{flex:1,flexDirection:'column',justifyContent: 'center',alignItems:'center'}}>
+            <Text style={{fontWeight:"600",justifyContent: 'center',alignItems:'center'}}>Days</Text>
+            <View style={{backgroundColor:'#5D862E',width:50,height:8,marginTop:5}} />
+          </View>
+          <View style={{flex:1,flexDirection:'column',justifyContent: 'center',alignItems:'center'}}>
+            <Text style={{fontWeight:"600",justifyContent: 'center' }}>WEEK</Text>
+            <View style={{backgroundColor:'#fff',width:50,height:8,marginTop:5,}} />
+          </View>
+          <View style={{flex:1,flexDirection:'column',justifyContent: 'center',alignItems:'center'}}>
+            <Text style={{fontWeight:"600",justifyContent: 'center' }}>MONTH</Text>
+            <View style={{backgroundColor:'#fff',width:50,height:8,marginTop:5}} />
+          </View>
+        </View>
+
+
+
+
+  }
+
+
+  _onMonthPrevButton()
+  {
+
+
+    this.setState({selectedDate:""+Moment((Moment(this.state.selectedDate,"ddd Do MMM YYYY").subtract(1, 'months').calendar())).format('ddd Do MMM YYYY')});
+
+
+  }
+  _onMonthNextButton()
+  {
+
+
+    this.setState({selectedDate:""+Moment((Moment(this.state.selectedDate,"ddd Do MMM YYYY").add(1, 'months').calendar())).format('ddd Do MMM YYYY')});
+
+  }
+  _onDayPrevButton()
+  {
+
+    this.setState({selectedDate:""+Moment((Moment(this.state.selectedDate,"ddd Do MMM YYYY").subtract(1, 'days').format())).format('ddd Do MMM YYYY')});
+
+  }
+  _onDayNextButton()
+  {
+
+      console.log(""+Moment().subtract(1, 'days').format('ddd'));
+    console.log(""+Moment((Moment(this.state.selectedDate,"ddd Do MMM YYYY").add(1, 'days').format())).format('ddd Do MMM YYYY'));
+
+    this.setState({selectedDate:""+Moment((Moment(this.state.selectedDate,"ddd Do MMM YYYY").add(1, 'days').format())).format('ddd Do MMM YYYY')});
+   // console.log(""+this.state.selectedDate);
+  }
+  renderScene(route , navigator){
     console.log(this.state);
     return(
         <View style={{flex:1}}>
@@ -201,51 +269,46 @@ export class USFTest extends Component{
       <View style={{marginTop:70, flexDirection:'column'}}>
 
 
-          <View style={{flexDirection:'row',marginTop:10}}>
+        <View style={{flexDirection:'row',marginTop:10}}>
 
-              <View style={{flex:1, flexDirection:'row', paddingHorizontal:10}}>
-                <View style={{flex:1, justifyContent: 'center'}}><Icon name="angle-left" size={30}  /></View>
-                <View style={{flex:1, justifyContent: 'center'}}><Text style={{fontWeight:"600",justifyContent: 'center' }}>
-                  March
-                </Text></View>
-                <View style={{flex:1, justifyContent: 'center', alignItems:'flex-end'}}>
-                <Icon name="angle-right" size={30}  />
-                  </View>
-              </View>
-              <View style={{flex:1, flexDirection:'row', paddingHorizontal:10}}>
-                <View style={{ justifyContent: 'center'}}><Icon name="angle-left" size={30}  /></View>
-
-                <View style={{flex:1, justifyContent: 'center',alignItems:'center'}}>
-                <Text style={{fontWeight:"600",justifyContent: 'center',alignItems:'center' }}>
-                    {""+new Date().toLocaleDateString()}
-                  </Text>
-
-                  </View>
-                <View style={{ justifyContent: 'center', alignItems:'flex-end'}}>
-                  <Icon name="angle-right" size={30}  />
-                </View>
-                </View>
-
+          <View style={{flex:1, flexDirection:'row', paddingHorizontal:10}}>
+            <TouchableHighlight onPress={this._onMonthPrevButton} style={{ justifyContent: 'center'}}><Icon
+                name="angle-left" size={30}/></TouchableHighlight>
+            <View style={{flex:1, justifyContent: 'center',alignItems:'center'}}>
+              <Text style={{fontWeight:"600",justifyContent: 'center',alignItems:'center' }}>
+                {Moment(this.state.selectedDate, "ddd Do MMM YYYY").format('MMMM')}
+              </Text>
+            </View>
+            <TouchableHighlight onPress={this._onMonthNextButton}
+                                style={{ justifyContent: 'center', alignItems:'flex-end'}}>
+              <Icon name="angle-right" size={30}/>
+            </TouchableHighlight>
           </View>
+          <View style={{flex:1, flexDirection:'row', paddingHorizontal:10}}>
+            <TouchableHighlight onPress={this._onDayPrevButton} style={{ justifyContent: 'center'}}><Icon
+                name="angle-left" size={30}/></TouchableHighlight>
+            <View style={{flex:1, justifyContent: 'center',alignItems:'center'}}>
+              <Text style={{fontWeight:"600",justifyContent: 'center',alignItems:'center' }}>
+                {"" + this.state.selectedDate}
+              </Text>
+
+            </View>
+            <TouchableHighlight onPress={this._onDayNextButton}
+                                style={{ justifyContent: 'center', alignItems:'flex-end'}}>
+              <Icon name="angle-right" size={30}/>
+            </TouchableHighlight>
+          </View>
+
+        </View>
         <View style={{marginTop:10,backgroundColor:'#ccc',height:1}}/>
         <ListView dataSource={this.state.timeSlots}
           renderRow={(rowData) => this.renderRow(rowData)}
           renderSeparator={this._renderSeparator}
         />
 
-        <View style={{marginBottom:20,backgroundColor:'#ccc',minHeight:80,alignItems:'center', flex:1,justifyContent: 'center',flexDirection:'row'}}>
+        {this.renderFooter()}
 
 
-          <View style={{flex:1, justifyContent: 'center',alignItems:'center'}}>
-              <Text style={{fontWeight:"600",justifyContent: 'center' }}>Days</Text>
-            </View>
-          <View style={{flex:1, justifyContent: 'center',alignItems:'center'}}>
-              <Text style={{fontWeight:"600",justifyContent: 'center' }}>Week</Text>
-            </View>
-          <View style={{flex:1, justifyContent: 'center',alignItems:'center'}}>
-              <Text style={{fontWeight:"600",justifyContent: 'center' }}>Month</Text>
-            </View>
-          </View>
 
 
 
@@ -338,6 +401,9 @@ const styles = StyleSheet.create({
     padding: 5,
 
     minHeight:50,
+  },border: {
+    borderColor:'pink',
+    borderWidth:4
   },
   header: {
     flexDirection: 'row',
@@ -354,6 +420,14 @@ const styles = StyleSheet.create({
   },
   text: {
 
+  }, box: {
+    flexDirection:'row', borderColor:'rgb(234,234,235)', borderWidth:1,shadowColor: "#000000",
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    shadowOffset: {
+      height: 1,
+      width: 0
+    }
   }
 });
 
